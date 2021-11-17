@@ -1,0 +1,134 @@
+<main>
+    <section class="section section-lg section-shaped">
+        <div class="shape shape-style-1 shape-default">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+       
+        <div class="container py-lg-md d-flex">
+            <div class="col px-0">
+              <div class="row">
+                <div class="col-lg-6">
+                  <h1 class="display-3  text-white">Project History
+                    <span>You will find here all your projects </span>
+                  </h1>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <br>
+          <br>
+          <br>
+          <br>
+          <br> <br>
+          <br>
+          
+      
+        <section class="section section-lg pt-lg-0 mt--200">
+            <div class="container">
+                <p-tabView [(activeIndex)]="index">
+                    <p-tabPanel header="Etape 1 ">
+                        <br> 
+                        <div class="row justify-content-center">
+                            <div class="col-lg-12">
+                              <div class="row row-grid">
+                               <div class="col-lg-4" *ngFor="let item of projetAhp; let i = index;">
+                                    <div class="card border-info mb-3" style="max-width: 18rem;">
+                                    <div class="card-body py-5">
+                                      <div class="icon icon-shape icon-shape-primary rounded-circle mb-4">
+                                        <i class="ni ni-check-bold"></i> {{item.name}}
+                                      </div>
+                                      <h6 class="text-primary text-uppercase">Projet {{i+1}}</h6>
+                                      <div>
+                                        <span class="badge badge-pill badge-primary">Number of criteria : </span>{{item.numbreCriters}}<br>
+                                        <span class="badge badge-pill badge-primary">Number of alternatives :</span>{{item.numbreAlternatives}}<br>
+                                        <span class="badge badge-pill badge-primary"> value of CR  :</span>{{item.cr}}<br>
+                                      </div>
+                                      <a  class="btn btn-primary mt-4" (click)="getprojectdetails(item) ; ">Learn more</a>
+                                      
+                                    </div>
+                                  </div>
+                                </div>
+                               
+                                  
+                              </div>
+                            </div>
+                          </div>
+                          
+                        </p-tabPanel>
+                        <p-tabPanel header="Etape 2 ">
+                          <div *ngIf="etap2">
+                            
+                          <div *ngFor="let item of arrayOne(numberCriters); let i = index;">
+                            <div class="container bg-light border mt-2"   >
+                              <div>
+                               <h2>Critere : {{criters[i].name}}</h2>
+                              
+                               <label for="fname">Weights :{{criters[i].poids}} </label>
+                              </div>
+
+                               <button *ngIf="!showmodification[i]" (click)="modif(i)" class="btn btn-sm btn-icon btn-primary" type="button" >
+                                <span class="btn-inner--icon"><i class="ni ni-bold-down"></i></span> Edit Criteria
+                              </button><button (click)="modif(i) ; edit(criters[i],i)"  *ngIf="showmodification[i]" class="btn btn-sm btn-icon btn-primary" type="button">
+                                <span class="btn-inner--icon"><i class="ni ni-bold-up"></i></span> Edit Criteria
+                              </button>
+                             
+                               <div *ngIf="showmodification[i]">
+                                <label for="fname">Entrer le nom de critere :</label>
+                                <input  type="text"  name="nom"  [(ngModel)]="criters[i].name" >
+                               </div>
+      
+                           </div>  
+                       </div>
+                       <a  class="btn btn-primary mt-4" (click)="getsousCriters() ">Show Sub-Criteria</a>
+                     </div> 
+
+                        </p-tabPanel>
+                        <p-tabPanel header="Etape 3 ">
+                          <div *ngIf="etap3">
+                          <div *ngFor="let item of arrayOne(numberCriters); let i = index;">
+                            <h2>Criterion : {{criters[i].name}}</h2>
+                            <div *ngFor="let item of arrayOne(n[i]); let j= index;">
+                              <div class="container bg-light border mt-2"   >
+                                <div>
+                                 <h2>Sub-Criterion: {{sousCriters[i][j].name}}</h2>
+                                
+                                 <label for="fname">Weights :{{sousCriters[i][j].poids}} </label>
+                                </div>
+  
+                                 <button *ngIf="!showmodificationsub[i][j]" (click)="modifsub(i,j) " class="btn btn-sm btn-icon btn-primary" type="button" >
+                                  <span class="btn-inner--icon"><i class="ni ni-bold-down"></i></span> Edit Criteria
+                                </button><button (click)="modifsub(i,j) ; editsub(sousCriters[i][j],i,j)"  *ngIf="showmodificationsub[i][j]" class="btn btn-sm btn-icon btn-primary" type="button">
+                                  <span class="btn-inner--icon"><i class="ni ni-bold-up"></i></span> Edit Criteria
+                                </button>
+                               
+                                 <div *ngIf="!showmodificationsub[i][j]">
+                                  <label for="fname">Entrer le nom de critere :</label>
+                                  <input  type="text"  name="nom"  [(ngModel)]="sousCriters[i][j].name" >
+                                 </div>
+        
+                             </div> 
+                            </div>
+                          </div>
+                        </div>
+                        </p-tabPanel>
+                        </p-tabView>
+             
+            </div>
+          </section>
+        
+          <div class="separator separator-bottom separator-skew">
+            <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+              <polygon class="fill-white" points="2560 0 2560 100 0 100"></polygon>
+            </svg>
+          </div>
+          
+    </section>
+    </main>

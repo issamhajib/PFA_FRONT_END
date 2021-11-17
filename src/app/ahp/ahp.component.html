@@ -1,0 +1,400 @@
+<main>
+    <section class="section section-lg section-shaped">
+        <div class="shape shape-style-1 shape-default">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+       
+      
+        <div class="aa">
+<p-tabView [(activeIndex)]="index">
+    <p-tabPanel header="Etape 1 ">
+      <h1>Project : {{nom}} {{numbreS}} </h1>
+  
+      <label for="fname">Project name :</label>
+      <input  type="text"  name="nom" [(ngModel)]="nom" >
+    
+  <br>
+  <form class="form-inline">
+    <div class="form-group mx-sm-3 mb-2">
+      <label for="inputPassword2" class="sr-only">Nombre de critere</label>
+      <input  type="number"  name="numbre" [(ngModel)]="numbre" placeholder="Number of criteria" >
+    </div>
+    <button type="submit" class="btn btn-primary mb-2" (click)="showInputs();openNext();addprojet()" > Next </button>
+  </form>
+    </p-tabPanel>
+    <p-tabPanel header="Etape 2">
+      <div *ngIf="showinputs">
+        <div *ngFor="let item of arrayOne(numbre); let i = index;">
+            <div class="container bg-light border mt-2"   >
+               <h2>Criterion : {{form[i]}}</h2>
+               <label for="fname">Enter the name of the Criterion: </label>
+               <input  type="text"  name="nom"  [(ngModel)]="form[i]" >
+                 <form class="form-inline">
+                   <div class="form-group mx-sm-3 mb-2">
+                    <label for="inputPassword2" class="sr-only">Number of the Sub-Criterion</label>
+                    <input  type="number"  name="numbreS" placeholder="Number of the Sub-Criterion" [(ngModel)]="n[i]" >
+                   </div>
+                   <button type="submit" class="btn btn-primary mb-2" (click)="showsous() ; showsousCrit(i)" >+</button>
+                </form>
+              <div *ngIf="showSousCriters[i]">
+               <div *ngFor="let item of arrayOne(n[i]); let ii = index;">
+                <div class="container bg-light border mt-2"   >
+                    <h2> Sub-Criterion  : {{formS[i][ii]}}</h2>
+                    <label for="fname">Enter the name of the  Sub-Criterion:</label>
+                    <input  type="text"  name="nom" [(ngModel)]="formS[i][ii]" >
+       
+        
+        </div>
+      </div> 
+      </div>
+       </div>
+     </div> 
+     <button type="submit" class="btn btn-primary mb-2" (click)="showDATA();openNext()" >  Generate the project's tree structure</button>
+     </div>
+    </p-tabPanel>
+    <p-tabPanel header="Etape 3">
+      <div *ngIf="showarbre">
+        <h2 class="display-3" style="text-align: center;">Hierarchical decomposition of criteria  </h2>
+  
+   
+        <ngx-org-chart [nodes]="nodes" direction="horizontal" ></ngx-org-chart>
+  
+        <button type="submit" class="btn btn-primary mb-2" (click)="openNext()" > Compare between the Criteria </button>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="Etape 4">
+
+      <div *ngIf="showarbre">
+        <h2 class="display-3" style="text-align: center;">The comparison between criteria </h2>
+        
+        <div *ngFor="let itemm of arrayOne(numbre); let ii = index; ">
+          <div *ngFor="let item of arrayOne(ii); let i = index; ">
+             
+            
+          Importance of the criterion " {{tableauCriter[i]}} " compared to " {{tableauCriter[ii]}} " : <select (change)="change($event.target,i,ii)"  class="selectt">
+              <option selected>Fill a number</option>
+             <option  *ngFor="let user of cities" [value]="user">{{ user }}</option> 
+            </select>
+         <!--    <input  type="number"  name="numbreS" placeholder="facteur" [(ngModel)]="facteur[i][ii]" >--> 
+     
+    
+          </div>
+         
+    
+        </div>
+        <button type="submit" class="btn btn-primary mb-2" (click)="showinfo();calculCR()" >Show comparison matrix of criteria</button>
+        <div *ngIf="showmatrice">
+          <h2 class="display-3" style="text-align: center;">The comparison matrix of criteria </h2>
+        <table class="table table-borderless">
+          <thead>
+            <tr>
+              <th> </th>
+              <th  *ngFor="let itemm of arrayOne(numbre); let i = index; ">{{tableauCriter[i]}}</th>
+              <th>Weights</th>
+             </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let itemm of arrayOne(numbre); let i = index; ">
+              <td>{{tableauCriter[i]}}</td>
+              <td *ngFor="let item of arrayOne(numbre); let ii = index; " >{{facteur[i][ii]}}</td>
+              <td>{{etap3PoidsSCR[i]}}</td> 
+            </tr>
+          </tbody>
+        </table>
+        Value of CR = {{CR}} <br>
+        <button type="submit" class="btn btn-primary mb-2" (click)="openNext();addcriters();" > Compare between the Sub-Criteria </button>
+      </div>
+         </div>
+    </p-tabPanel>
+   
+    <p-tabPanel header="Etape 5">
+      <div *ngIf="showarbre">
+        <h2 class="display-3" style="text-align: center;">The comparison between sub-criteria </h2>
+      <div *ngFor="let itemm of arrayOne(numbre); let j = index; ">
+  
+       Criteria " {{tableauCriter[j]}} " : 
+        <div *ngFor="let itemm of arrayOne(n[j]); let ii = index; ">
+          <div *ngFor="let item of arrayOne(ii); let i = index; ">
+          Importance of sub-creterion " {{formS[j][i]}} " compared to " {{formS[j][ii]}} " : <select (change)="changee($event.target,i,ii,j)"  class="selectt">
+              <option selected>fill a number </option>
+             <option  *ngFor="let user of cities" [value]="user">{{ user }}</option> 
+            </select>
+             
+            </div>
+          
+        </div>
+  
+        
+  
+      </div>
+      <button type="submit" class="btn btn-primary mb-2" (click)="addfacteurCriters();showMatriceSous();addsousCriters();calculsubCR()" > Show comparison matrix of Sub-Criteria </button>
+  
+      <div *ngIf="showSousmatrice">
+       
+        <div *ngFor="let itemm of arrayOne(numbre); let j = index; ">
+          <h2 class="display-3" style="text-align: center;"> The comparison matrix of sub-criteria with respect to criteria " {{tableauCriter[j]}} "</h2>
+ 
+        <table class="table table-borderless">
+          <thead>
+            <tr>
+              <th> </th>
+              <th  *ngFor="let itemm of arrayOne(n[j]); let i = index; ">{{formS[j][i]}}</th>
+              <th >Weights</th>
+             </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let itemm of arrayOne(n[j]); let i = index; ">
+              <td>{{formS[j][i]}}</td>
+              <td *ngFor="let item of arrayOne(n[j]); let ii = index; " >{{facteurSoucCriter[j][i][ii]}}</td>
+              <td  >{{etap3Poids[j][i]}}</td>
+            </tr>
+          </tbody>
+        </table>
+        Value CR : {{CRsub[j]}}
+      </div>
+      <button type="submit" class="btn btn-primary mb-2" (click)="openNext()" > Show Weights </button>
+    </div>
+    
+    </div>
+  
+    </p-tabPanel>
+   
+    <p-tabPanel header="Etape 6">
+      <div *ngIf="showSousmatrice">
+        <h2 class="display-3" style="text-align: center;">The normalized sub-criteria weightings </h2>
+      <table style="width:100%" class="a">
+        <thead class="a" >
+          <th class="a" > criteria </th>
+          <th class="a"> level one </th>
+          <th class="a"> Sub-criteria</th>
+          <th class="a"> level two </th>
+        </thead >
+        <tr class="a" *ngFor="let itemm of arrayOne(numbre); let j = index; " >
+          <td  class="a" >{{form[j]}}</td>
+          <td  class="a">{{etap3PoidsSCR[j]}}</td>
+          <td class="a" >
+            <tr  *ngFor="let itemm of arrayOne(n[j]); let i = index; ">
+              {{formS[j][i]}}
+          </tr>
+          
+        </td>
+        <td class="a" >
+          <tr  *ngFor="let itemm of arrayOne(n[j]); let i = index; ">
+            {{leveltwo[j][i]}}
+        </tr>
+        
+      </td>
+        </tr>
+       </table>
+    <br> 
+      <button type="submit" class="btn btn-primary mb-2" (click)="openNext()" > Go to TOPSIS Method </button>
+    </div>
+    </p-tabPanel>
+    <p-tabPanel header="Etape 7">
+
+      <form class="form-inline">
+        <div class="form-group mx-sm-3 mb-2">
+         <label for="inputPassword2" class="sr-only">Number of Alternatives </label>
+         <input  type="number"  name="numbreS" placeholder="Number of Alternatives " [(ngModel)]="numbreAlternative" >
+        </div>
+        <button type="submit" class="btn btn-primary mb-2" (click)="showALternatives();addprojet()"> +</button>
+     </form>
+      
+     
+      <div *ngIf="showalterINputsAlternative">
+        <div *ngFor="let item of arrayOne(numbreAlternative); let i = index;">
+            <div class="container bg-light border mt-2"   >
+               <h2>Alternative : {{alternative[i]}} </h2>
+               <label for="fname">Fill the name of the Alternative {{i+1}} :</label>
+               <input  type="text"  name="nom"  [(ngModel)]="alternative[i]" >
+       </div>
+     </div> 
+     <button type="submit" class="btn btn-primary mb-2" (click)="showetap7();openNext();" > Relation between Sub-Creteria and Alternatives </button>
+     </div>
+    
+    
+
+
+    </p-tabPanel>
+<p-tabPanel header="Etape 8">
+  <div *ngIf="showtab7" >
+    <h2 class="display-3" style="text-align: center;">Input values of the TOPSIS analysis </h2>
+    
+ 
+  <table class="table table-borderless">
+    <thead>
+      <tr>
+        <th > Criteria </th>
+        <th> Weights </th>
+        <th  *ngFor="let item of arrayOne(numbreAlternative); let i = index;"> {{alternative[i]}} </th>
+       </tr>
+    </thead>
+    <tbody *ngFor="let item of arrayOne(numbre); let j = index;" >
+      <tr  *ngFor="let item of arrayOne(n[j]); let i = index;" >
+        <td >{{formS[j][i]}}</td>
+        <td >{{leveltwo[j][i]}}</td>
+        <td *ngFor="let item of arrayOne(numbreAlternative); let jj = index;" >
+          <select (change)="xx($event.target,j,i,jj)"  class="selectt">
+          <option selected>Fill a number </option>
+         <option  *ngFor="let user of altfact" [value]="user">{{ user }}</option> 
+        </select> </td>
+      </tr>
+    </tbody>
+  </table>
+   
+  <button type="submit" class="btn btn-primary mb-2" (click)="show();etap1topsis();etap2topsis();openNext()" > Show the weighted normalized decision matrix </button>
+</div>
+
+</p-tabPanel>
+<p-tabPanel header="Etape 9">
+  <div *ngIf="showtab7" >
+ 
+    <h2 class="display-3" style="text-align: center;">Show the weighted normalized decision matrix </h2>
+    <table class="table table-borderless">
+      <thead>
+        <tr>
+          <th > Criteria </th>
+          
+          <th  *ngFor="let item of arrayOne(numbreAlternative); let i = index;"> {{alternative[i]}} </th>
+          <th>+</th>
+          <th>-</th>
+          <th>A*</th>
+          <th>A-</th>
+       </tr>
+      </thead>
+      <tbody *ngFor="let item of arrayOne(numbre); let j = index;" >
+        <tr  *ngFor="let item of arrayOne(n[j]); let i = index;" >
+          <td >{{formS[j][i]}}</td>
+          <td *ngFor="let item of arrayOne(numbreAlternative); let jj = index;" >
+          {{facteur2alternative[j][i][jj]}}  
+          </td>
+          <td> <input type="radio" name="{{formS[j][i]}}" value="Female" (click)="setradio('+',j,i)">  </td>
+          <td><input type="radio" name="{{formS[j][i]}}" value="Male" (click)="setradio('-',j,i)" >  </td>
+          <td>{{aplus[j][i]}}</td>
+          <td>{{amoins[j][i]}}</td>
+        </tr>
+      </tbody>
+    </table>
+     
+    <button type="submit" class="btn btn-primary mb-2" (click)=" etapfinal1();openNext()" > Show the final evaluation and ranking of alternatives </button>
+  </div>
+
+
+</p-tabPanel>
+<p-tabPanel header="Etpae10">
+  <div *ngIf="showetapetapfinaltopsis" >
+    <h2 class="display-3" style="text-align: center;">The final evaluation and ranking of alternatives  </h2>
+    <table class="table table-borderless">
+      <thead>
+        <tr>
+          <th> </th>
+          <th>D*</th>
+          <th>D-</th>
+          <th>Ci</th>
+          <th>Rank</th>
+
+       </tr>
+      </thead>
+      <tbody >
+        <tr  *ngFor="let item of arrayOne(numbreAlternative); let i = index;" >
+          <td >{{alternative[i]}}</td>
+          <td>{{dplus[i]}}</td>
+          <td>{{dmoins[i]}}</td>
+          <td>{{ci[i]}}</td>
+          <td>{{ranks[i]}}</td>
+        </tr>
+      </tbody>
+    </table>
+     
+    <button type="submit" class="btn btn-primary mb-2" (click)=" etapfinal1()" > show </button>
+  </div>
+</p-tabPanel>
+  </p-tabView>
+  
+  <!--
+  <p-button icon="pi " (click)="openPrev()"> </p-button>
+  <p-button icon="pi " (click)="openNext()"> suivant </p-button>
+  
+  -->
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<br>
+<br>
+
+    </section>      
+</main>
+  
+   
+   
+  
+  
+      
+      
+    
